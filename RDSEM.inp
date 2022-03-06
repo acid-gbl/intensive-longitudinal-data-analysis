@@ -1,0 +1,73 @@
+  DATA:	FILE = two-level data with Trend.csv;
+  VARIABLE:  
+    NAMES ARE URGE DEP JS HS PERSON TIME;
+    USEVARIABLES URGE DEP JS HS TIME;
+    Lagged = URGE(1) DEP(1);!Created a Lag-1 variable for urge to smoke and depression;
+    CLUSTER=PERSON;
+    BETWEEN = JS HS;! Job Stress and Home Stress are only used in the Between-Level model;
+    WITHIN = TIME;! Time is only used in the Within-Level model;
+
+  ANALYSIS:   
+    TYPE = TWOLEVEL RANDOM;!Two-Level Model with paths that are latent variables;
+    ESTIMATOR = BAYES;!Lagged variables can only be estimated with Bayes in Mplus;
+    BITERATIONS = (1000);!Run at least 1000 iteration of the MCMC algorithm;
+    BSEED=1028;
+
+  MODEL:
+    %WITHIN%
+    PHI1 | URGE^ ON URGE^1;
+    ! urge to smoke is regressed on Lag-1 urge to smoke
+    PHI2 | DEP^ ON DEP^1;
+    ! depression is regressed on Lag-1 depression
+    PHI3 | DEP^ ON URGE^1;
+    ! Depression is regressed on Lag-1 urge to smoke
+    PHI4 | URGE^ ON DEP^1;
+    ! urge to smoke is regress on Lag-1 depression
+    TREND1 | URGE ON TIME;! urge is regressed on time to capture the trend over time
+    TREND2 | DEP ON TIME;! dep is regressed on time to capture the trend over time
+    LogV1 | Urge;
+    ! the Within-Level residual variance of urge to smoke
+    LogV2 | DEP;
+    ! the Within-Level residual variance of depression
+
+    %BETWEEN%
+    [URGE]; !mean intercept of urge to smoke
+    [DEP]; !mean intercept of depression
+    [PHI1]; !mean of urge autoregressive slope
+    [PHI2]; !mean of depression autoregressive slope
+    [PHI3]; !mean of dep on urge&1 slope
+    [PHI4]; !mean of urge on dep&1 slope
+    [TREND1];
+    [TREND2];
+    [LogV1];
+    !log of the mean of the urge residual variance
+    [LogV2];
+    !log of the mean of the urge residual variance
+
+    URGE; !urge to smoke intercept variance
+    DEP; !depression intercept variance
+    PHI1; !urge to smoke autoregressive slope variance
+    PHI2; !depression autoregressive slope variance
+    PHI3; !dep on urge&1 slope variance
+    PHI4; !urge on dep&1 slope
+    TREND1;
+    TREND2;
+    LogV1;
+    !between-person variance of urge to smoke residual variance
+    LogV2; !between-person variance of depression residual variance
+    
+    URGE on JS HS; 
+    DEP on JS HS; 
+    !The person-specific intercepts are predicted by Job Stress and Home Stress;
+    PHI1 on JS HS;
+    PHI2 on JS HS;
+    PHI3 on JS HS;
+    PHI4 on JS HS;
+    !The person-specific slopes are predicted by Job Stress and Home Stress;
+    LOGV1 on JS HS;
+    LOGV2 on JS HS;
+    !The person-specific residual variances are predicted by Job Stress and Home Stress;
+
+    URGE DEP PHI1-PHI4 LOGV1 LOGV2 WITH URGE DEP PHI1-PHI4 LOGV1 LOGV2;
+
+ OUTPUT: TECH1 TECH8 STDYX;

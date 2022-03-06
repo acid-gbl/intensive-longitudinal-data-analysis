@@ -1,0 +1,39 @@
+  DATA:	FILE = two-level data with Trend.csv;
+  VARIABLE:  
+    NAMES ARE URGE DEP JS HS PERSON TIME;
+    USEVARIABLES URGE DEP JS HS TIME;
+    cluster=PERSON;
+    BETWEEN = JS HS;
+    WITHIN = TIME DEP;! Time is only used in the Within-Level model;
+   
+  DEFINE:
+    CENTER DEP (groupmean);
+
+  ANALYSIS:   
+    TYPE = TWOLEVEL RANDOM;!Two-Level Model with paths that are latent variables;
+
+  MODEL:
+    %WITHIN%
+    b1i | URGE ON DEP;
+    ! urge to smoke is regressed on Lag-1 urge to smoke,phi_1i
+    trend | URGE ON TIME;! urge is regressed on time to capture the trend over time, the !slope is latent;
+    
+    %BETWEEN%
+    URGE b1i;
+    URGE with b1i TREND;b1i with TREND;
+
+    [URGE]; !mean intercept of urge to smoke, gamma_00;
+    [b1i]; !mean of the regressive slope;
+    [TREND];
+
+    URGE; !urge to smoke intercept variance;
+    b1i; !regressive slope variance;
+    TREND;
+    
+    URGE on JS HS; 
+    !The person-specific intercept is predicted by Job Stress and Home Stress;
+    b1i on JS HS;
+    !The regressive slope is predicted by Job Stress and Home Stress;
+    TREND on JS HS;
+
+ OUTPUT: TECH1 TECH8;

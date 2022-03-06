@@ -1,0 +1,463 @@
+Mplus VERSION 8.4
+MUTHEN & MUTHEN
+11/20/2020  10:41 AM
+
+INPUT INSTRUCTIONS
+
+    DATA:	FILE = two-level data with Trend.csv;
+    VARIABLE:
+      NAMES ARE URGE DEP JS HS PERSON TIME;
+      USEVARIABLES URGE DEP JS HS TIME;
+      cluster=PERSON;
+      BETWEEN = JS HS;
+      WITHIN = TIME DEP;! Time is only used in the Within-Level model;
+
+    DEFINE:
+      CENTER DEP (groupmean);
+
+    ANALYSIS:
+      TYPE = TWOLEVEL RANDOM;!Two-Level Model with paths that are latent variables;
+
+    MODEL:
+      %WITHIN%
+      b1i | URGE ON DEP;
+      ! urge to smoke is regressed on Lag-1 urge to smoke,phi_1i
+      trend | URGE ON TIME;! urge is regressed on time to capture the trend over time, the !
+
+      %BETWEEN%
+      URGE b1i;
+      URGE with b1i TREND;b1i with TREND;
+
+      [URGE]; !mean intercept of urge to smoke, gamma_00;
+      [b1i]; !mean of the regressive slope;
+      [TREND];
+
+      URGE; !urge to smoke intercept variance;
+      b1i; !regressive slope variance;
+      TREND;
+
+      URGE on JS HS;
+      !The person-specific intercept is predicted by Job Stress and Home Stress;
+      b1i on JS HS;
+      !The regressive slope is predicted by Job Stress and Home Stress;
+      TREND on JS HS;
+
+   OUTPUT: TECH1 TECH8;
+
+
+
+*** WARNING
+  Input line exceeded 90 characters. Some input may be truncated.
+      trend | URGE ON TIME;! urge is regressed on time to capture the trend over time, the !s
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        5000
+
+Number of dependent variables                                    1
+Number of independent variables                                  4
+Number of continuous latent variables                            2
+
+Observed dependent variables
+
+  Continuous
+   URGE
+
+Observed independent variables
+   DEP         JS          HS          TIME
+
+Continuous latent variables
+   B1I         TREND
+
+Variables with special functions
+
+  Cluster variable      PERSON
+
+  Within variables
+   DEP         TIME
+
+  Between variables
+   JS          HS
+
+  Centering (GROUPMEAN)
+   DEP
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                   100
+Convergence criterion                                    0.100D-05
+Maximum number of EM iterations                                500
+Convergence criteria for the EM algorithm
+  Loglikelihood change                                   0.100D-02
+  Relative loglikelihood change                          0.100D-05
+  Derivative                                             0.100D-03
+Minimum variance                                         0.100D-03
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  two-level data with Trend.csv
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of clusters                        100
+
+     Average cluster size       50.000
+
+     Estimated Intraclass Correlations for the Y Variables
+
+                Intraclass              Intraclass              Intraclass
+     Variable  Correlation   Variable  Correlation   Variable  Correlation
+
+     URGE         0.387
+
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     URGE                  3.910       0.854      -7.179    0.02%       0.574      2.277      3.224
+            5000.000      16.200       0.820      21.643    0.02%       4.212      6.999
+     DEP                   0.000       0.000      -3.600    0.02%      -0.825     -0.252      0.001
+            5000.000       0.981       0.091       3.691    0.02%       0.245      0.818
+     TIME                 25.500       0.000       1.000    2.00%      10.000     20.000     25.500
+            5000.000     208.250      -1.201      50.000    2.00%      30.000     40.000
+     JS                   -0.055       0.514      -2.098    1.00%      -0.760     -0.416     -0.285
+             100.000       0.744       0.072       2.415    1.00%       0.022      0.682
+     HS                    0.136      -0.054      -2.490    1.00%      -0.741     -0.031      0.173
+             100.000       0.963       0.139       2.544    1.00%       0.418      0.829
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       16
+
+Loglikelihood
+
+          H0 Value                       -8318.547
+          H0 Scaling Correction Factor      1.4808
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   16669.094
+          Bayesian (BIC)                 16773.369
+          Sample-Size Adjusted BIC       16722.527
+            (n* = (n + 2) / 24)
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Within Level
+
+ Residual Variances
+    URGE               1.327      0.083     15.961      0.000
+
+Between Level
+
+ B1I        ON
+    JS                 0.270      0.081      3.331      0.001
+    HS                 0.334      0.085      3.909      0.000
+
+ TREND      ON
+    JS                -0.005      0.011     -0.471      0.638
+    HS                -0.011      0.011     -0.960      0.337
+
+ URGE       ON
+    JS                 0.458      0.079      5.783      0.000
+    HS                 0.286      0.078      3.647      0.000
+
+ URGE     WITH
+    B1I               -0.077      0.057     -1.352      0.176
+    TREND             -0.017      0.007     -2.254      0.024
+
+ B1I      WITH
+    TREND              0.008      0.007      1.174      0.240
+
+ Intercepts
+    URGE              -0.089      0.072     -1.240      0.215
+    B1I                0.741      0.075      9.844      0.000
+    TREND              0.157      0.011     14.953      0.000
+
+ Residual Variances
+    URGE               0.409      0.069      5.936      0.000
+    B1I                0.565      0.083      6.809      0.000
+    TREND              0.010      0.001      7.258      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.274E-04
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION FOR WITHIN
+
+
+           NU
+              URGE          DEP           TIME
+              ________      ________      ________
+                    0             0             0
+
+
+           LAMBDA
+              URGE          DEP           TIME
+              ________      ________      ________
+ URGE               0             0             0
+ DEP                0             0             0
+ TIME               0             0             0
+
+
+           THETA
+              URGE          DEP           TIME
+              ________      ________      ________
+ URGE               0
+ DEP                0             0
+ TIME               0             0             0
+
+
+           ALPHA
+              URGE          DEP           TIME
+              ________      ________      ________
+                    0             0             0
+
+
+           BETA
+              URGE          DEP           TIME
+              ________      ________      ________
+ URGE               0             0             0
+ DEP                0             0             0
+ TIME               0             0             0
+
+
+           PSI
+              URGE          DEP           TIME
+              ________      ________      ________
+ URGE               1
+ DEP                0             0
+ TIME               0             0             0
+
+
+     PARAMETER SPECIFICATION FOR BETWEEN
+
+
+           NU
+              URGE          JS            HS
+              ________      ________      ________
+                    0             0             0
+
+
+           LAMBDA
+              B1I           TREND         URGE          JS            HS
+              ________      ________      ________      ________      ________
+ URGE               0             0             0             0             0
+ JS                 0             0             0             0             0
+ HS                 0             0             0             0             0
+
+
+           THETA
+              URGE          JS            HS
+              ________      ________      ________
+ URGE               0
+ JS                 0             0
+ HS                 0             0             0
+
+
+           ALPHA
+              B1I           TREND         URGE          JS            HS
+              ________      ________      ________      ________      ________
+                    2             3             4             0             0
+
+
+           BETA
+              B1I           TREND         URGE          JS            HS
+              ________      ________      ________      ________      ________
+ B1I                0             0             0             5             6
+ TREND              0             0             0             7             8
+ URGE               0             0             0             9            10
+ JS                 0             0             0             0             0
+ HS                 0             0             0             0             0
+
+
+           PSI
+              B1I           TREND         URGE          JS            HS
+              ________      ________      ________      ________      ________
+ B1I               11
+ TREND             12            13
+ URGE              14            15            16
+ JS                 0             0             0             0
+ HS                 0             0             0             0             0
+
+
+     STARTING VALUES FOR WITHIN
+
+
+           NU
+              URGE          DEP           TIME
+              ________      ________      ________
+                0.000         0.000         0.000
+
+
+           LAMBDA
+              URGE          DEP           TIME
+              ________      ________      ________
+ URGE           1.000         0.000         0.000
+ DEP            0.000         1.000         0.000
+ TIME           0.000         0.000         1.000
+
+
+           THETA
+              URGE          DEP           TIME
+              ________      ________      ________
+ URGE           0.000
+ DEP            0.000         0.000
+ TIME           0.000         0.000         0.000
+
+
+           ALPHA
+              URGE          DEP           TIME
+              ________      ________      ________
+                0.000         0.000         0.000
+
+
+           BETA
+              URGE          DEP           TIME
+              ________      ________      ________
+ URGE           0.000         0.000         0.000
+ DEP            0.000         0.000         0.000
+ TIME           0.000         0.000         0.000
+
+
+           PSI
+              URGE          DEP           TIME
+              ________      ________      ________
+ URGE           8.100
+ DEP            0.000         0.490
+ TIME           0.000         0.000       104.125
+
+
+     STARTING VALUES FOR BETWEEN
+
+
+           NU
+              URGE          JS            HS
+              ________      ________      ________
+                0.000         0.000         0.000
+
+
+           LAMBDA
+              B1I           TREND         URGE          JS            HS
+              ________      ________      ________      ________      ________
+ URGE           0.000         0.000         1.000         0.000         0.000
+ JS             0.000         0.000         0.000         1.000         0.000
+ HS             0.000         0.000         0.000         0.000         1.000
+
+
+           THETA
+              URGE          JS            HS
+              ________      ________      ________
+ URGE           0.000
+ JS             0.000         0.000
+ HS             0.000         0.000         0.000
+
+
+           ALPHA
+              B1I           TREND         URGE          JS            HS
+              ________      ________      ________      ________      ________
+                0.000         0.000         3.910         0.000         0.000
+
+
+           BETA
+              B1I           TREND         URGE          JS            HS
+              ________      ________      ________      ________      ________
+ B1I            0.000         0.000         0.000         0.000         0.000
+ TREND          0.000         0.000         0.000         0.000         0.000
+ URGE           0.000         0.000         0.000         0.000         0.000
+ JS             0.000         0.000         0.000         0.000         0.000
+ HS             0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              B1I           TREND         URGE          JS            HS
+              ________      ________      ________      ________      ________
+ B1I            1.000
+ TREND          0.000         1.000
+ URGE           0.000         0.000         8.100
+ JS             0.000         0.000         0.000         0.372
+ HS             0.000         0.000         0.000         0.000         0.481
+
+
+TECHNICAL 8 OUTPUT
+
+
+   E STEP  ITER  LOGLIKELIHOOD    ABS CHANGE   REL CHANGE  ALGORITHM
+              1 -0.11015814D+05    0.0000000    0.0000000  EM
+              2 -0.84197279D+04 2596.0863350    0.2356690  EM
+              3 -0.83201492D+04   99.5786676    0.0118268  EM
+              4 -0.83186847D+04    1.4645150    0.0001760  EM
+              5 -0.83185660D+04    0.1186924    0.0000143  EM
+              6 -0.83185498D+04    0.0161760    0.0000019  EM
+              7 -0.83185474D+04    0.0023821    0.0000003  EM
+              8 -0.83185471D+04    0.0003591    0.0000000  EM
+
+
+   TECHNICAL 8 OUTPUT FOR THE H1 MODEL
+
+
+   E STEP  ITER  LOGLIKELIHOOD    ABS CHANGE   REL CHANGE  ALGORITHM
+              1 -0.13034726D+05    0.0000000    0.0000000  EM
+              2 -0.10927028D+05 2107.6974301    0.1616986  EM
+              3 -0.10926205D+05    0.8230664    0.0000753  EM
+              4 -0.10926205D+05    0.0003593    0.0000000  EM
+              5 -0.10926205D+05    0.0000002    0.0000000  EM
+
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for multilevel analysis.
+  No diagram output was produced.
+
+
+     Beginning Time:  10:41:19
+        Ending Time:  10:41:19
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2019 Muthen & Muthen
